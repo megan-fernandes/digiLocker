@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controller/verifyAdhaar");
+const verifyController = require("../controller/verifyAdhaar");
+const StatusController = require("../controller/getStatus");
 
-router.post("/verifyAdhaar", controller.verifyAdhaar);
+router.post("/verifyAdhaar", verifyController.verifyAdhaar);
+
+router.get("/getStatus/:id", StatusController.getStatus);
 
 module.exports = router;

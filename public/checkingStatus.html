@@ -1,0 +1,44 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>DigiLocker Integration</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form action="/authorize/getStatus" method="post">
+      <input type="submit" value="Get Documents " />
+    </form>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DigiLocker Integration</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form id="statusForm" action="/authorize/getStatus/${id}" method="get">
+      <!-- Hidden input fields to store the URL parameters -->
+      <input type="hidden" id="success" name="success" />
+      <input type="hidden" id="id" name="id" />
+      <input type="hidden" id="scope" name="scope" />
+
+      <!-- Submit button -->
+      <input type="submit" value="Get Documents" />
+    </form>
+
+    <script>
+      // Function to get URL parameters by name
+      function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      // Set values for hidden input fields from URL parameters
+      document.getElementById("success").value = getUrlParameter("success");
+      document.getElementById("id").value = getUrlParameter("id");
+      document.getElementById("scope").value = getUrlParameter("scope");
+    </script>
+  </body>
+</html>

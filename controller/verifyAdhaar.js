@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 module.exports.verifyAdhaar = async (reqs, resp) => {
-  console.log("in here");
+  console.log("POST/initiate");
 
   const https = require("https");
   const url = "https://dg-sandbox.setu.co/api/digilocker";
   const jsonData = JSON.stringify({
-    redirectUrl: "http://localhost:3000",
+    redirectUrl: "http://localhost:3000/checkingStatus.html",
   });
   const options = {
     method: "post",
