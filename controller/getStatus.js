@@ -1,46 +1,66 @@
 require("dotenv").config();
+const db = require("../config/db");
 
 module.exports.getStatus = async (reqs, resp) => {
   console.log("GET/status");
-  console.log(reqs.params)
+  const requestId = reqs.query.id;
 
-  //   const https = require("https");
-  //   const url = "https://dg-sandbox.setu.co/api/digilocker";
-  //   const jsonData = JSON.stringify({
-  //     redirectUrl: "http://localhost:3000",
-  //   });
-  //   const options = {
-  //     method: "post",
-  //     headers: {
-  //       "x-client-id": process.env.CLIENT_ID,
-  //       "x-client-secret": process.env.CLIENT_SECRET,
-  //       "x-product-instance-id": process.env.PRODUCT_INSTANCE_ID,
-  //       "Content-Type": "application/json",
-  //     },
-  //   };
+  const https = require("https");
+  const url = `https://dg-sandbox.setu.co/api/digilocker/${requestId}/status`;
 
-  //   const req = https.request(url, options, (res) => {
-  //     let responseData = "";
+  const options = {
+    method: "get",
+    headers: {
+      "x-client-id": process.env.CLIENT_ID,
+      "x-client-secret": process.env.CLIENT_SECRET,
+      "x-product-instance-id": process.env.PRODUCT_INSTANCE_ID,
+      "Content-Type": "application/json",
+    },
+  };
 
-  //     res.on("data", (chunk) => {
-  //       responseData += chunk;
-  //     });
+  const req = https.request(url, options, (res) => {
+    let responseData = "";
 
-  //     res.on("end", () => {
-  //       const respData = JSON.parse(responseData);
-  //       console.log(respData.id);
+    res.on("data", (chunk) => {
+      responseData += chunk;
+    });
 
-  //       //add to db
+    res.on("end", () => {
+      const respData = JSON.parse(responseData);
+      console.log(respData);
+      const sql = `
+  INSERT INTO user_data ("digi_locker_id", "user_id", "status", "valid_upto")
+  VALUES ($1, $2, $3, $4)
+`;
+      db.query(
+        sql,
+        [
+          respData.digilockerid,
+          respData.id,
+          respData.status,
+          respData.validUpto,
+        ],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            resp.status(400).json(err);
+          } else {
+            resp.status(200).json({ message: "Success", result: result });
+          }
+        }
+      );
 
-  //       const redirectUrl = JSON.parse(responseData).url;
-  //       console.log("Redirecting to:", redirectUrl);
-  //       resp.redirect(redirectUrl);
-  //     });
-  //   });
+      //add to db
 
-  //   req.on("error", (error) => {
-  //     console.error("Error:", error.message);
-  //   });
-  //   req.write(jsonData);
-  //   req.end();
+      // const redirectUrl = JSON.parse(responseData).url;
+      // console.log("Redirecting to:", redirectUrl);
+      // resp.redirect(redirectUrl);
+    });
+  });
+
+  req.on("error", (error) => {
+    console.error("Error:", error.message);
+  });
+  // req.write(jsonData);
+  req.end();
 };
