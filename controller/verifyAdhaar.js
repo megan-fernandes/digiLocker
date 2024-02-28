@@ -29,8 +29,6 @@ module.exports.verifyAdhaar = async (reqs, resp) => {
       const respData = JSON.parse(responseData);
       console.log(respData.id);
 
-      //add to db
-
       const redirectUrl = JSON.parse(responseData).url;
       console.log("Redirecting to:", redirectUrl);
       resp.redirect(redirectUrl);

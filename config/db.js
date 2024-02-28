@@ -17,4 +17,4 @@ db.connect()
     console.error("Error connecting to PostgreSQL database", err);
   });
 
-module.exports.default = db;
+module.exports = db;

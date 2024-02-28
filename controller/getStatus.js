@@ -28,33 +28,37 @@ module.exports.getStatus = async (reqs, resp) => {
     res.on("end", () => {
       const respData = JSON.parse(responseData);
       console.log(respData);
-      const sql = `
-  INSERT INTO user_data ("digi_locker_id", "user_id", "status", "valid_upto")
-  VALUES ($1, $2, $3, $4)
-`;
-      db.query(
-        sql,
-        [
-          respData.digilockerid,
-          respData.id,
-          respData.status,
-          respData.validUpto,
-        ],
-        (err, result) => {
-          if (err) {
-            console.log(err);
-            resp.status(400).json(err);
-          } else {
-            resp.status(200).json({ message: "Success", result: result });
+
+      if (respData.status === "authenticated") {
+        const sql = `INSERT INTO user_data ("digi_locker_id", "user_id", "status", "valid_upto")
+        VALUES ($1, $2, $3, $4)
+        `;
+        db.query(
+          sql,
+          [
+            respData.digilockerid,
+            respData.id,
+            respData.status,
+            respData.validUpto,
+          ],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              resp.status(400).json(err);
+            } else {
+              resp.status(200).json({
+                message: "Success",
+                message: "You have been authenticated",
+              });
+            }
           }
-        }
-      );
-
-      //add to db
-
-      // const redirectUrl = JSON.parse(responseData).url;
-      // console.log("Redirecting to:", redirectUrl);
-      // resp.redirect(redirectUrl);
+        );
+      } else {
+        resp.status(200).json({
+          message: "Failure",
+          message: "Something went wrong. Please try again",
+        });
+      }
     });
   });
 

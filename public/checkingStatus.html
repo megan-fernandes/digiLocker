@@ -20,12 +20,10 @@
   <body>
     <form id="statusForm" action="/authorize/getStatus/${id}" method="get">
       <!-- Hidden input fields to store the URL parameters -->
-      <input type="hidden" id="success" name="success" />
       <input type="hidden" id="id" name="id" />
-      <input type="hidden" id="scope" name="scope" />
 
       <!-- Submit button -->
-      <input type="submit" value="Get Documents" />
+      <input type="submit" value="Check Your Status" />
     </form>
 
     <script>
@@ -36,9 +34,7 @@
       }
 
       // Set values for hidden input fields from URL parameters
-      document.getElementById("success").value = getUrlParameter("success");
       document.getElementById("id").value = getUrlParameter("id");
-      document.getElementById("scope").value = getUrlParameter("scope");
     </script>
   </body>
 </html>
